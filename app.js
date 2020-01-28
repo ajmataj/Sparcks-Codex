@@ -18,6 +18,10 @@ app.use(
 );
 
 // API endpoints
+app.get('/', (req, res) => 
+    res.send('http get request send to root api endpoint')
+);
+
 app.post(
     '/api/users', 
     [
@@ -36,5 +40,5 @@ app.post(
 );
 
 // Connection listener
-const port = process.env.port || 3000;
-app.listen(3000, () => console.log(`Express server running on port ${port}`));
+const port = process.env.port || 5000;
+app.listen(port, () => console.log(`Express server running on port ${port}`));
