@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './bootstrap.css';
 import axios from 'axios';
 
 class App extends React.Component {
@@ -22,9 +22,9 @@ class App extends React.Component {
   render() {
     return(
       <div className = "App" >
-        <header className="App-header">
+        <h1>
           Sparck's Codex
-        </header>
+        </h1>
         {this.state.data}
       </div>
     );
