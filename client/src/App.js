@@ -1,6 +1,6 @@
 import React from 'react';
-import './bootstrap.css';
 import axios from 'axios';
+import "bootswatch/dist/sandstone/bootstrap.min.css";
 
 class App extends React.Component {
   state = {
