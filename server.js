@@ -4,6 +4,8 @@ import { check, validationResult } from 'express-validator';
 import cors from 'cors';
 import User from './models/User';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import config from 'config';
 
 // Initialize express application
 const app = express();
@@ -33,7 +35,7 @@ app.post(
     [
         check('name', 'Please enter your username').not().isEmpty(),
         check('email', 'Please enter a valid email').isEmail(),
-        check('password', 'Please enter a password with a minimum of 8 or more characters').isLength({ min: 6 })
+        check('password', 'Please enter a password with 8 or more characters').isLength({ min: 6 })
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -41,8 +43,8 @@ app.post(
             return res.status(422).json({ errors: errors.array() });
         } else {
             const { name, email, password } = req.body;
-            // Check if user exists
             try {
+                // Check if user exists
                 let user = await User.findOne({ email: email });
                 if (user) {
                     return res
@@ -63,7 +65,22 @@ app.post(
 
                 // Save to the db and return
                 await user.save();
-                res.send('User successfully registered');
+                // Generate and return a JwT token
+                const payload = {
+                    user: {
+                        id: user.id
+                    }
+                };
+
+                jwt.sign(
+                    payload,
+                    config.get('jwtSecret'),
+                    { expiresIn: '10hr' },
+                    (err, token) => {
+                        if (err) throw err;
+                        res.json({ token: token });
+                    }
+                );
             } catch (error) {
                 res.status(500).send('Server error');
             }
